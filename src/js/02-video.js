@@ -20,8 +20,9 @@ function handleTimeupdate({ seconds }) {
 }
 
 //on page load, restores player current time from local storage
+// eslint-disable-next-line no-unused-vars
 function handlePageLoad(_evt) {
-   const sec = localStorage.getItem('videoplayer-current-time');
+  const sec = localStorage.getItem('videoplayer-current-time');
   if (sec) player.setCurrentTime(sec);
 }
 

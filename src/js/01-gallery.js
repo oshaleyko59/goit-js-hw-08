@@ -16,7 +16,13 @@ galleryContainer.insertAdjacentHTML(
 	createGalleryMarkup(galleryItems)
 );
 
-//initialize SimpleLightBox with options for source of caption and caption delay ms
+//initialize SimpleLightBox with options for source of caption
+//and caption delay ms
+// eslint-disable-next-line no-unused-vars
+const lightbox = new SimpleLightbox(".gallery a", {
+	captionsData: "alt",
+	captionDelay: 250,
+});
 
 //functions below can be moved to external module
 //and createGalleryMarkup can be exported from there
