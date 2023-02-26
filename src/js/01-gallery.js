@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import SimpleLightbox from "simplelightbox";
 // Додатковий імпорт стилів
 import "simplelightbox/dist/simple-lightbox.min.css";
@@ -16,10 +17,6 @@ galleryContainer.insertAdjacentHTML(
 );
 
 //initialize SimpleLightBox with options for source of caption and caption delay ms
-const lightbox = new SimpleLightbox(".gallery a", {
-	captionsData: "alt",
-	captionDelay: 250,
-});
 
 //functions below can be moved to external module
 //and createGalleryMarkup can be exported from there
