@@ -5,6 +5,19 @@ const STORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 let formFields; //initialized inside handlePageLoad func
 
+//FIX: 20230227 data shall not be submitted if there are empty fields.
+//     idea: submit btn -> disabled @any of input fields is empty
+//     solution:
+//          -added function isAnyEmpty which examines the values
+//           of the object entries and returns true if founds any empty.
+//          -isAnyEmpty is called on page load event and on input event
+const empty = (value) => !value;
+function isAnyEmpty(savedObj) {
+  return Object.values(savedObj).some(empty);
+}
+
+const btnSubmit = form.lastElementChild;
+
 window.addEventListener('load', handlePageLoad);
 form.addEventListener('submit', handleSubmit);
 /* 4-Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500ms  */
@@ -15,8 +28,9 @@ form.addEventListener('input', throttle(handleInput, 500));
 об'єкт з полями email і message i поточними значеннями полів форми.
 Ключ для сховища - рядок "feedback-form-state". */
 function handleInput(evt) {
-  formFields[evt.target.name] = evt.target.value;
+  formFields[evt.target.name] = evt.target.value.trim();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formFields));
+  btnSubmit.disabled = isAnyEmpty(formFields);
 }
 
 /*** handles submit event on the form - clears local storage and form
@@ -30,6 +44,10 @@ function handleSubmit(evt) {
   //consol output as per reqs
   console.log(formFields);
 
+  //start over, with empty form
+  btnSubmit.disabled = true;
+  formFields = {};
+
   evt.preventDefault();
 }
 
@@ -38,23 +56,24 @@ function handleSubmit(evt) {
  * заповнюй ними поля форми. В іншому випадку поля повинні бути порожніми. */
 // eslint-disable-next-line no-unused-vars
 function handlePageLoad(_evt) {
+  btnSubmit.disabled = true;
   formFields = {};
   const savedFields = localStorage.getItem(STORAGE_KEY);
   if (savedFields)
     try {
       formFields = JSON.parse(savedFields);
-      fillForm(formFields);
+      fillForm(formFields, form);
+      //allow submitting if every field has data
+      if (!isAnyEmpty(formFields)) btnSubmit.disabled = false;
     } catch (error) {
       console.log('Corrupted data from local storage');
     }
-  //console.log('loaded', formFields);
 }
 
-//** fills form fields from object retrieved from local storage
-function fillForm(savedObj) {
+//** fills form fields from object
+function fillForm(savedObj, aForm) {
   Object.entries(savedObj).forEach(entry => {
-    form.elements[entry[0]].value = entry[1];
+    aForm.elements[entry[0]].value = entry[1];
   });
 }
-
 
