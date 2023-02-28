@@ -1,7 +1,6 @@
 import throttle from "lodash.throttle";
 
 const STORAGE_KEY = 'feedback-form-state';
-
 const form = document.querySelector('.feedback-form');
 
 //FIX: 20230227 1)data shall not be submitted if email is empty
@@ -9,10 +8,10 @@ const form = document.querySelector('.feedback-form');
 form.firstElementChild.firstElementChild.required = true;
 
 let formFields; //initialized inside handlePageLoad func
-
 window.addEventListener('load', handlePageLoad);
 form.addEventListener('submit', handleSubmit);
-/* 4-Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500ms  */
+
+/***  4-Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500ms  */
 form.addEventListener('input', throttle(handleInput, 500));
 
 /*** handles input event on the form
@@ -53,11 +52,11 @@ function handlePageLoad(_evt) {
       formFields = JSON.parse(savedFields);
       fillForm(formFields, form);
     } catch (error) {
-      console.log('Corrupted data from local storage');
+      console.log('Corrupted object from local storage');
     }
 }
 
-//** fills form fields from object
+//** fills form fields from saved object
 function fillForm(savedObj, aForm) {
   Object.entries(savedObj).forEach(entry => {
     aForm.elements[entry[0]].value = entry[1];
